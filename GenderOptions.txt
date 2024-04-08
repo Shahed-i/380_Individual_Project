@@ -1,0 +1,7 @@
+boy 
+gender queer
+girl
+man
+non-binary
+two-spirit
+woman
