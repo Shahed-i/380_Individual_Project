@@ -1,36 +1,40 @@
 package edu.ucalgary.oop;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
-
-import java.util.List;
+import org.junit.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class InquirerQuerySearchTest {
 
     @Test
-    public void testLogInquirerQuery() {
-        ReliefService reliefService = new ReliefService();
-        InquiryDetails inquiryDetails = new InquiryDetails("Test inquiry");
-        reliefService.logInquiry(inquiryDetails);
-        assertEquals("logInquiry() should correctly log 'Test inquiry'", "Test inquiry", reliefService.getInquiryDetails());
+    public void testLogNewInquiry() throws SQLException {
+        // Mock user input
+        String input = "John\nDoe\n1234567890\nDetails\n3\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        // Establish a connection
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ensf380project", "oop", "ucalgary");
+
+        // Log a new inquiry
+        assertTrue(InquirerQuerySearch.logNewInquiry(connection, "John", "Doe", "1234567890", "Details"));
     }
 
     @Test
-    public void testSearchByName() {
-        ReliefService reliefService = new ReliefService();
-        DisasterVictim victim = new DisasterVictim("Mark Loren", "2024-01-23");
-        String partialName = "Mark";
-        List<DisasterVictim> missingPersons = reliefService.searchDisasterVictim(partialName);
+    public void testSearchForInquirer() throws SQLException {
+        // Establish a connection
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ensf380project", "oop", "ucalgary");
 
-        assertFalse("The missingPersons list should not be empty", missingPersons.isEmpty());
-
-        boolean containsPartialName = false;
-        for (DisasterVictim missingPerson : missingPersons) {
-            if (missingPerson.getFullName().contains(partialName)) {
-                containsPartialName = true;
-                break;
-            }
-        }
-        assertTrue("searchDisasterVictim() should have found a match if it exists", containsPartialName);
+        // Search for an existing inquirer
+        String searchTerm = "John";
+        String result = InquirerQuerySearch.searchForInquirer(connection, searchTerm);
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
     }
+
+
 }

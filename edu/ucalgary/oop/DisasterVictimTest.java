@@ -11,27 +11,6 @@ public class DisasterVictimTest {
     @Before
     public void setUp() {
         victim = new DisasterVictim("John", "2024-03-12", 30);
-        public DisasterVictim(String firstName, String ENTRY_DATE, int age) {
-    super(firstName, "");
-    if (age < 0) {
-        throw new IllegalArgumentException("Age cannot be negative");
-    }
-    this.age = age;
-    this.ENTRY_DATE = ENTRY_DATE;
-    this.medicalRecords = new ArrayList<>();
-    this.familyConnections = new ArrayList<>(); // Initialize familyConnections ArrayList
-    this.personalBelongings = new ArrayList<>();
-}
-
-public DisasterVictim(String firstName, String ENTRY_DATE, String dateOfBirth) {
-    super(firstName, "");
-    this.dateOfBirth = dateOfBirth;
-    this.ENTRY_DATE = ENTRY_DATE;
-    this.medicalRecords = new ArrayList<>();
-    this.familyConnections = new ArrayList<>(); // Initialize familyConnections ArrayList
-    this.personalBelongings = new ArrayList<>();
-}
-
     }
 
     @Test

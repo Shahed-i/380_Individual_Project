@@ -1,8 +1,11 @@
 package edu.ucalgary.oop;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
-public class DisasterVictim extends Person{
+public class DisasterVictim extends Person {
     private String dateOfBirth;
     private int age;
     private String comments;
@@ -12,6 +15,7 @@ public class DisasterVictim extends Person{
     private String ENTRY_DATE;
     private ArrayList<Supply> personalBelongings;
     private String supply;
+    private String gender; // New field for gender
     public enum Diet {
         AVML, DBML, GFML, KSML, LSML, MOML, PFML, VGML, VJML
     }
@@ -51,7 +55,7 @@ public class DisasterVictim extends Person{
 
     public String getEntryDate() {
         return ENTRY_DATE;
-    }   
+    }
 
     public int getAssignedSocialID() {
         return ASSIGNED_SOCIAL_ID;
@@ -73,6 +77,10 @@ public class DisasterVictim extends Person{
         return Integer.toString(age);
     }
 
+    public String getGender() {
+        return gender;
+    }
+
     public void setAge(int age) {
         if (age < 0) {
             throw new IllegalArgumentException("Age cannot be negative");
@@ -82,7 +90,7 @@ public class DisasterVictim extends Person{
 
     public void setEntryDate(String entryDate) {
         this.ENTRY_DATE = entryDate;
-    } 
+    }
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
@@ -106,6 +114,28 @@ public class DisasterVictim extends Person{
 
     public void setSupply(String supply) {
         this.supply = supply;
+    }
+
+    public void setGender(String gender) {
+        try {
+            boolean valid = false;
+            File genderFile = new File("GenderOptions.txt");
+            Scanner genderVerifier = new Scanner(genderFile);
+            while (genderVerifier.hasNextLine()) {
+                if (gender.toLowerCase().equals(genderVerifier.nextLine().replaceAll("[\r\n]", ""))) {
+                    valid = true;
+                    break; // Exit loop once valid gender found
+                }
+            }
+            genderVerifier.close();
+
+            if (!valid) {
+                throw new IllegalArgumentException("Invalid gender. Acceptable values are male, female, or other.");
+            }
+            this.gender = gender.toLowerCase();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removePersonalBelonging(Supply supply) {
@@ -174,4 +204,3 @@ public class DisasterVictim extends Person{
         }
     }
 }
-
