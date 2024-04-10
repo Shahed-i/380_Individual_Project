@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
-public class DisasterVictim extends Person {
+public class DisasterVictim extends Person implements DisasterVictimInfoInterface {
     private String dateOfBirth;
     private int age;
     private String comments;
@@ -15,7 +16,8 @@ public class DisasterVictim extends Person {
     private String ENTRY_DATE;
     private ArrayList<Supply> personalBelongings;
     private String supply;
-    private String gender; // New field for gender
+    private String gender;
+    private ArrayList<DisasterVictim> victims;
     public enum Diet {
         AVML, DBML, GFML, KSML, LSML, MOML, PFML, VGML, VJML
     }
@@ -29,7 +31,8 @@ public class DisasterVictim extends Person {
         this.ENTRY_DATE = ENTRY_DATE;
         this.medicalRecords = new ArrayList<>();
         this.familyConnections = new ArrayList<>();
-        this.personalBelongings = new ArrayList<>();
+        this.personalBelongings = new ArrayList<>();;
+        this.victims = new ArrayList<>();
     }
 
     public DisasterVictim(String firstName, String ENTRY_DATE, String dateOfBirth) {
@@ -39,6 +42,7 @@ public class DisasterVictim extends Person {
         this.medicalRecords = new ArrayList<>();
         this.familyConnections = new ArrayList<>();
         this.personalBelongings = new ArrayList<>();
+        this.victims = new ArrayList<>();
     }
 
     public String getDateOfBirth() {
@@ -203,4 +207,92 @@ public class DisasterVictim extends Person {
                 break;
         }
     }
+
+    @Override
+    public void start() {
+        System.out.println("Welcome to the Disaster Victim Information System");
+
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Enter a new Disaster Victim");
+            System.out.println("2. View all entered Disaster Victims");
+            System.out.println("3. Exit");
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    enterNewDisasterVictim();
+                    break;
+                case 2:
+                    viewAllDisasterVictims();
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    closeScanner();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        }
+    }
+
+    @Override
+    public List<DisasterVictim> getVictims() {
+        List<DisasterVictim> victims = new ArrayList<>();
+        for (Supply supply : personalBelongings) {
+            DisasterVictim victim = new DisasterVictim(supply.getType(), "2024-01-01", 0); // Assuming entry date and age, adjust as needed
+            // Set other properties of the victim as needed
+            victims.add(victim);
+        }
+        return victims;
+    }
+
+    @Override
+    public void addVictim(DisasterVictim victim) {
+        victims.add(victim);
+    }
+
+    @Override
+    public void closeScanner() {
+        scanner.close();
+    }
+
+    @Override
+public void enterNewDisasterVictim() {
+    System.out.println("\nEnter details for the new Disaster Victim:");
+
+    System.out.print("First Name: ");
+    String firstName = scanner.nextLine();
+
+    System.out.print("Entry Date (YYYY-MM-DD): ");
+    String entryDate = scanner.nextLine();
+
+    DisasterVictim victim;
+
+    System.out.print("Do you want to enter Date of Birth (Y/N): ");
+    String choice = scanner.nextLine();
+    if (choice.equalsIgnoreCase("Y")) {
+        System.out.print("Date of Birth (YYYY-MM-DD): ");
+        String dateOfBirth = scanner.nextLine();
+        victim = new DisasterVictim(firstName, entryDate, dateOfBirth);
+    } else {
+        victim = new DisasterVictim(firstName, entryDate, 0);
+    }
+
+    System.out.print("Last Name: ");
+    victim.setLastName(scanner.nextLine());
+
+    System.out.print("Gender: ");
+    victim.setGender(scanner.nextLine());
+
+    System.out.print("Comments: ");
+    victim.setComments(scanner.nextLine());
+
+    addVictim(victim);
+    System.out.println("Disaster Victim information entered successfully.");
+}
+
 }
